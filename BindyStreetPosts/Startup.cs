@@ -1,9 +1,12 @@
+using BindyStreetPosts.DataContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 
 namespace BindyStreetPosts
 {
@@ -22,12 +25,16 @@ namespace BindyStreetPosts
 
             services.AddControllersWithViews();
 
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
             });
-        }
+
+            services.AddDbContext<DBContext>(options => options.UseInMemoryDatabase(databaseName: "BindyStreet"));
+
+    }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

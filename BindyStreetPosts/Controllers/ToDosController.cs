@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using BindyStreetPosts.DataContext;
+using BindyStreetPosts.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 
 namespace BindyStreetPosts.Controllers
 {
@@ -13,23 +11,22 @@ namespace BindyStreetPosts.Controllers
     public class ToDosController : ControllerBase
     {
 
-        private readonly ILogger<ToDosController> _logger;
+        private DBContext _context;
 
-        public ToDosController(ILogger<ToDosController> logger)
+        public ToDosController(DBContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         [HttpGet]
-        public IEnumerable<ToDo> Get()
+        public IEnumerable<Graph> Get()
         {
-            JArray jArray = JArray.Parse(System.IO.File.ReadAllText("todos.json"));
-            return Enumerable.Range(0, 29).Select(index => new ToDo
-            {
-                id = jArray[index]["id"].ToString(),
-                count = jArray[index]["title"].ToString().Length,
-                title = (string)jArray[index]["title"]
+            ToDo[] todo = _context.ToDo.Where(td => td.Id < 31).ToArray();
 
+            return Enumerable.Range(0, todo.Length).Select(index => new Graph
+            {
+                id = todo[index].Id.ToString(),
+                count = todo[index].Title.ToString().Length
             })
             .ToArray();
         }

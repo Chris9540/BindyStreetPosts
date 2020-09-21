@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using BindyStreetPosts.DataContext;
+using BindyStreetPosts.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 
 namespace BindyStreetPosts.Controllers
 {
@@ -13,25 +11,17 @@ namespace BindyStreetPosts.Controllers
     public class BlogPostsController : ControllerBase
     {
 
-        private readonly ILogger<BlogPostsController> _logger;
+        private DBContext _context;
 
-        public BlogPostsController(ILogger<BlogPostsController> logger)
+        public BlogPostsController(DBContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         [HttpGet]
         public IEnumerable<BlogPost> Get()
         {
-            JArray jArray = JArray.Parse(System.IO.File.ReadAllText("posts.json"));
-            return Enumerable.Range(0, 29).Select(index => new BlogPost
-            {
-                id = (int)jArray[index]["id"],
-                userId = (int)jArray[index]["userId"],
-                title = (string)jArray[index]["title"],
-                body = (string)jArray[index]["body"]
-            })
-            .ToArray();
+            return _context.BlogPosts.Where(p => p.Id < 31).ToArray();
         }
     }
 }
