@@ -5,12 +5,9 @@ using System.Threading.Tasks;
 
 namespace BindyStreetPosts
 {
-    public class ToDo
+    public class Graph
     {
         public string id { get; set; }
-
         public int count { get; set; }
-
-        public string title { get; set; }
     }
 }
